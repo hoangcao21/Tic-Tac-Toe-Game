@@ -1,0 +1,81 @@
+﻿--------------------------------------------------------------------------------- PACKAGES
+client package and server package
+
+
+--------------------------------------------------------------------------------- CLIENT
+Object:
+		Player:
+			- playerName
+			- playerId (Created on server)
+			+ toString(): playerName
+
+(+) LOGIN form:
+	Button:
+		Join button to register with server
+	
+After player "join", server saves his/her info on server-side application (specifically ArrayList<Player>) by using
+	
+Client-side: ObjectOutputStream, OutputStream (Socket)
+	Get OutputStream from the socket
+	Place OutputStream inside constructor of ObjectOuputStream
+	Write the object to the server
+
+
+Server-side: InputStream (Socket), ObjectInputStream
+	Get InputStream from the socket
+	Place InputStream inside constructor of ObjectInputStream
+	Read the object, then add it to ArrayList<Player>
+
+(+) ROOM form:
+After the Login form, Room form display. The server write the ArrayList<Player> listPlayers back to the client. 
+Convert ArrayList to Vector<Player>(ArrayList<Player>).
+Use the ListBox with DefaultListModel to display the name of player.
+	+ No player or 1 player, display a message "No player. Please Wait."
+	+ >= 2 player, update the list
+
+Maybe client have thread with "while(true)" to always update the list of player on real-time.
+Maybe create a class named Invitation(String senderName, String senderId, String receiverId).
+Maybe a thread with functionality: invite and accept/reject on both client and server.
+socket.setKeepAlive(true)
+--------------------------------------------------------------------------------- SERVER
+Object:
+	PlayerAndSocketInfo
+		+ PlayerAndSocketInfo(String playerId, Socket acceptFromPlayer, ObjectInputStream, ObjectOuputStream)
+
+Server-side app have 3 threads:
+	- Register thread
+	- LoadPlayerLists thread
+	- Invitation thread
+	- PlayGames thread
+	
+
+Server-side have 
+		 ArrayList<Player>
+		 ArrayList<PlayerAndSocketInfo>
+		<NEW> ArrayList<Player> listPlayingPlayers
+
+--------------------------------------------------------------------------------- HOW TO WIN
+Các hướng THẮNG:
+Lưu ý: cả chiều ngược và chiều xuôi
+	NGANG: 
+		+ 0 - 1 - 2 x 
+		+ 3 - 4 - 5 x
+		+ 6 - 7 - 8 x
+	DỌC: 
+		+ 0 - 3 - 6 x
+		+ 1 - 4 - 7 x
+		+ 2 - 8 - 5 x
+	CHÉO:
+		+ 0 - 4 - 8 x
+		+ 2 - 4 - 6 x
+
+
+<Old one> Client-side: FileOutputStream, FileInputStream, ObjectOutputStream, OutputStream (Socket)
+	Use FileOutputStream constructor with the name: playerId_obj.txt
+	Use ObjectOutputStream construtor with FileOutputStream, use writeObject(Player) to write on the text file.
+	Use FileInputStream with the existent text file
+	Use OutputStream from the socket to send the file to server
+<Old once> Server-side: InputStream, FileOutputStream, FileInputStream, ObjectInputStream
+	Use InputStream to receive the file, then use FileOutputStream to write to a new file named "PXX_obj.txt"
+	Use ObjectInputStream with FileInputStream to read the object
+	Add the object to ArrayList<Player>
